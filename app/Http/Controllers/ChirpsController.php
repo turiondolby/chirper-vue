@@ -6,19 +6,20 @@ use Inertia\Inertia;
 use App\Models\Chirp;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class ChirpsController extends Controller
 {
     public function index(): Response
     {
         return Inertia::render('Chirps/Index', [
-            //
+            'chirps' => Chirp::with('user:id,name')->latest()->get()
         ]);
     }
 
     public function create() {}
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'message' => ['required', 'string', 'max:255']
